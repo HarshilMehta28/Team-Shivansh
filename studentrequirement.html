@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Join Project Groups</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: white;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* ✅ Home Button Style */
+    .home-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #6B73FF, #9644FF);
+      color: white;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      text-decoration: none;
+      z-index: 1000;
+    }
+
+    .title {
+      font-size: 3rem;
+      font-weight: 800;
+      text-align: center;
+      color: #2563eb;
+      margin: 2rem 0;
+      text-transform: uppercase;
+      animation: titleGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes titleGlow {
+      0% { filter: drop-shadow(0 0 10px rgba(107, 115, 255, 0.3)); }
+      100% { filter: drop-shadow(0 0 20px rgba(150, 68, 255, 0.5)); }
+    }
+
+    .search-section,
+    .group-form {
+      margin: 2rem;
+      background: #f5f5ff;
+      padding: 1.5rem;
+      border-radius: 8px;
+      border: 2px solid #ccc;
+    }
+
+    .search-container {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .search-btn, .clear-search {
+      padding: 0.8rem 1.5rem;
+      border: none;
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .search-btn {
+      background: linear-gradient(135deg, #6B73FF, #9644FF);
+    }
+
+    .clear-search {
+      background: #666;
+    }
+
+    .group-form label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 600;
+    }
+
+    .group-form input, .group-form textarea {
+      width: 100%;
+      padding: 0.8rem;
+      margin-top: 0.4rem;
+      border-radius: 6px;
+      border: 2px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .group-form button {
+      margin-top: 1.5rem;
+      padding: 0.8rem 2rem;
+      background: linear-gradient(135deg, #6B73FF, #9644FF);
+      border: none;
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .requirements-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      padding: 2rem;
+    }
+
+    .requirement-card {
+      border: 2px solid #333;
+      padding: 1.5rem;
+      background: white;
+      border-radius: 10px;
+      position: relative;
+      box-shadow: 0 10px 20px rgba(107, 115, 255, 0.15);
+    }
+
+    .requirement-card h3 {
+      font-size: 1.4rem;
+      color: #333;
+      margin-bottom: 0.6rem;
+    }
+
+    .requirement-card p {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    .delete-btn {
+      background: #ff4444;
+      color: white;
+      padding: 0.4rem 1rem;
+      border: none;
+      border-radius: 5px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
+    .highlight {
+      background-color: yellow;
+      padding: 1px 2px;
+      border-radius: 2px;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 3rem;
+      color: #666;
+      font-size: 1.1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ✅ Home Button (Update href to your actual homepage URL) -->
+  <a href="homepage.html" class="home-btn">Home</a> <!-- 🔗 Replace 'home.html' with your actual homepage link -->
+
+  <h1 class="title">Join a Project</h1>
+
+  <div class="search-section">
+    <h2 style="margin-bottom: 1rem;">Search Projects</h2>
+    <div class="search-container">
+      <input type="text" id="searchInput" class="search-input" placeholder="Search by project name or requirements...">
+      <button onclick="performSearch()" class="search-btn">Search</button>
+      <button onclick="clearSearch()" class="clear-search">Clear</button>
+    </div>
+    <div id="searchResultsInfo" style="margin-top: 1rem; font-style: italic;"></div>
+  </div>
+
+  <div class="group-form">
+    <h2>Post Project Requirement</h2>
+    <label for="groupName">Project Name</label>
+    <input type="text" id="groupName" placeholder="e.g., Tech Club, Robotics Team">
+
+    <label for="requirements">Requirements / Description</label>
+    <textarea id="requirements" rows="4" placeholder="e.g., Looking for a frontend developer familiar with ReactJS."></textarea>
+
+    <label for="contactEmail">Contact Email</label>
+    <input type="email" id="contactEmail" placeholder="e.g., techclub@example.com">
+
+    <label for="contactPhone">Contact Phone</label>
+    <input type="tel" id="contactPhone" placeholder="e.g., +91 234-567-8900">
+
+    <label for="entryPassword">Set a Password (for deleting later)</label>
+    <input type="password" id="entryPassword" placeholder="Choose a password">
+
+    <button onclick="postRequirement()">Post Requirement</button>
+  </div>
+
+  <div class="requirements-grid" id="requirementsGrid"></div>
+
+  <script>
+    let allEntries = [];
+    let filteredEntries = [];
+    let isSearchActive = false;
+
+    let currentUserEmail = localStorage.getItem("currentUserEmail");
+
+    window.onload = function () {
+      loadData();
+
+      document.getElementById('searchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') performSearch();
+      });
+
+      document.getElementById('searchInput').addEventListener('input', function() {
+        if (this.value.trim() === '') {
+          clearSearch();
+        } else {
+          performSearch();
+        }
+      });
+    };
+
+    function loadData() {
+      const stored = localStorage.getItem("projectRequirements");
+      if (stored) {
+        allEntries = JSON.parse(stored);
+        filteredEntries = [...allEntries];
+        renderAllCards();
+      }
+    }
+
+    function performSearch() {
+      const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+      if (searchTerm === '') {
+        clearSearch();
+        return;
+      }
+
+      isSearchActive = true;
+      filteredEntries = allEntries.filter(entry =>
+        entry.name.toLowerCase().includes(searchTerm) ||
+        entry.desc.toLowerCase().includes(searchTerm)
+      );
+
+      renderAllCards();
+      updateSearchInfo(searchTerm);
+    }
+
+    function clearSearch() {
+      document.getElementById('searchInput').value = '';
+      isSearchActive = false;
+      filteredEntries = [...allEntries];
+      renderAllCards();
+      document.getElementById('searchResultsInfo').textContent = '';
+    }
+
+    function updateSearchInfo(searchTerm) {
+      const count = filteredEntries.length;
+      const info = document.getElementById('searchResultsInfo');
+      if (count === 0) {
+        info.textContent = `No projects found for "${searchTerm}"`;
+      } else {
+        info.textContent = `Found ${count} project${count > 1 ? 's' : ''} matching "${searchTerm}"`;
+      }
+    }
+
+    function postRequirement() {
+      const name = document.getElementById("groupName").value.trim();
+      const desc = document.getElementById("requirements").value.trim();
+      const contactEmail = document.getElementById("contactEmail").value.trim().toLowerCase();
+      const contactPhone = document.getElementById("contactPhone").value.trim();
+      const password = document.getElementById("entryPassword").value.trim();
+
+      if (!name || !desc || !contactEmail || !contactPhone || !password) {
+        alert("Please fill in all fields including password.");
+        return;
+      }
+
+      const entry = {
+        name,
+        desc,
+        contactEmail,
+        contactPhone,
+        password // store password for deletion check
+      };
+
+      allEntries.push(entry);
+      localStorage.setItem("projectRequirements", JSON.stringify(allEntries));
+      filteredEntries = [...allEntries];
+
+      renderAllCards();
+
+      // Clear the form
+      document.getElementById("groupName").value = "";
+      document.getElementById("requirements").value = "";
+      document.getElementById("contactEmail").value = "";
+      document.getElementById("contactPhone").value = "";
+      document.getElementById("entryPassword").value = "";
+    }
+
+    function renderAllCards() {
+      const grid = document.getElementById("requirementsGrid");
+      grid.innerHTML = "";
+
+      if (filteredEntries.length === 0) {
+        grid.innerHTML = '<div class="no-results">No projects match your search or no entries yet.</div>';
+        return;
+      }
+
+      filteredEntries.forEach((entry, index) => {
+        const originalIndex = allEntries.indexOf(entry);
+        renderCard(entry, originalIndex);
+      });
+    }
+
+    function renderCard(entry, originalIndex) {
+      const searchTerm = document.getElementById('searchInput').value.trim();
+      const card = document.createElement("div");
+      card.className = "requirement-card";
+
+      const name = highlightText(entry.name, searchTerm);
+      const desc = highlightText(entry.desc, searchTerm);
+
+      card.innerHTML = `
+        <h3>${name}</h3>
+        <p>${desc}</p>
+        <p style="font-size:0.85rem;color:#999;"><strong>Email:</strong> ${entry.contactEmail}</p>
+        <p style="font-size:0.85rem;color:#999;"><strong>Phone:</strong> ${entry.contactPhone}</p>
+      `;
+
+      const btn = document.createElement("button");
+      btn.className = "delete-btn";
+      btn.textContent = "Delete";
+      btn.onclick = () => deleteEntry(originalIndex);
+      card.appendChild(btn);
+
+      document.getElementById("requirementsGrid").appendChild(card);
+    }
+
+    function highlightText(text, term) {
+      if (!isSearchActive || !term) return text;
+      const regex = new RegExp(`(${term})`, 'gi');
+      return text.replace(regex, '<span class="highlight">$1</span>');
+    }
+
+    function deleteEntry(index) {
+      const entry = allEntries[index];
+
+      const userPassword = prompt("Enter the password that was set when posting this entry:");
+
+      if (userPassword === null) return;
+
+      if (userPassword !== entry.password) {
+        alert("Incorrect password. Cannot delete entry.");
+        return;
+      }
+
+      if (confirm("Password correct. Do you really want to delete this project requirement?")) {
+        allEntries.splice(index, 1);
+        localStorage.setItem("projectRequirements", JSON.stringify(allEntries));
+        filteredEntries = [...allEntries];
+        renderAllCards();
+      }
+    }
+  </script>
+</body>
+</html>

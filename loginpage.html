@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VibeBoard - Login</title>
+  <style>
+    /* Same styles as you already had */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow-x: hidden; position: relative; }
+    .bg-animation { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; }
+    .floating-shape { position: absolute; background: rgba(255, 255, 255, 0.1); border-radius: 50%; animation: float 6s ease-in-out infinite; }
+    .floating-shape:nth-child(1) { width: 80px; height: 80px; top: 10%; left: 10%; }
+    .floating-shape:nth-child(2) { width: 60px; height: 60px; top: 70%; left: 80%; animation-delay: 2s; }
+    .floating-shape:nth-child(3) { width: 100px; height: 100px; top: 50%; left: 5%; animation-delay: 4s; }
+    .floating-shape:nth-child(4) { width: 40px; height: 40px; top: 20%; left: 90%; animation-delay: 1s; }
+    @keyframes float { 0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)} }
+    .login-container { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-radius: 24px; padding: 3rem 2.5rem; width: 100%; max-width: 450px; box-shadow: 0 25px 50px rgba(0,0,0,0.15); }
+    h2 { text-align:center; margin-bottom:1.5rem; }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-input { width: 100%; padding: 1rem; border: 2px solid #e1e5e9; border-radius: 16px; font-size: 1rem; outline: none; }
+    .form-input:focus { border-color: #667eea; box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1); }
+    .login-btn { width: 100%; padding: 1rem; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 16px; font-size: 1.1rem; font-weight: 600; cursor: pointer; }
+    .login-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(102,126,234,0.4); }
+    .signup-link { text-align:center; margin-top:1.5rem; font-size:0.95rem; }
+    .signup-link a { color:#667eea; text-decoration:none; font-weight:600; }
+    body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  z-index: -1;
+}
+.login-container h2 {
+  position: relative;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #333;
+}
+
+/* Logo watermark behind the heading */
+.heading-with-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+    .heading-with-logo img {
+  width: 90px;   /* increased size */
+  height: 90px;  /* increased size */
+  border-radius: 50%;
+  background: rgb(233, 232, 240);
+  margin-right: 30px;
+  padding: 8px;
+  box-shadow: 0 8px 20px rgba(102,126,234,0.35);
+}
+
+    
+    .heading-with-logo h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #333;
+      margin: 0;
+    }
+
+
+  </style>
+</head>
+<body>
+  <div class="bg-animation">
+    <div class="floating-shape"></div>
+    <div class="floating-shape"></div>
+    <div class="floating-shape"></div>
+    <div class="floating-shape"></div>
+  </div>
+
+  <div class="login-container">
+    <div class="heading-with-logo">
+      <img src="https://img.icons8.com/color/96/000000/graduation-cap.png" alt="Logo">
+      <h2>Login to VibeBoard</h2>
+    </div>
+    <form id="loginForm">
+      <div class="form-group">
+        <input type="email" id="loginEmail" class="form-input" placeholder="Email" required>
+      </div>
+      <div class="form-group">
+        <input type="password" id="loginPassword" class="form-input" placeholder="Password" required>
+      </div>
+      <button type="submit" class="login-btn">Login</button>
+    </form>
+    <div class="signup-link">
+      Don't have an account? <a href="signup.html">Sign up</a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
+      const user = storedUsers.find(u => u.email === email && u.password === password);
+
+      if(user){
+        alert("Welcome, " + user.username + "!");
+        window.location.href = "homepage.html";
+      } else {
+        alert("Invalid credentials. Please try again.");
+      }
+    });
+  </script>
+</body>
+</html>

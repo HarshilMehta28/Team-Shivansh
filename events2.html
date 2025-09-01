@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Upcoming Events</title>
+  <style>
+    /* Your original CSS remains intact—no changes here */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+body {
+  font-family: 'Poppins', sans-serif;
+  background: white;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+/* Home Button Styles */
+.home-button {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #6B73FF, #9644FF);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(107, 115, 255, 0.3);
+  z-index: 10000;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.home-button:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(107, 115, 255, 0.5);
+}
+.home-button:active {
+  transform: translateY(0) scale(1);
+}
+.home-icon {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+.container {
+  max-width: 1800px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 3rem;
+  background: white;
+  position: relative;
+  flex: 1;
+  min-height: 100vh;
+}
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+}
+.title {
+  font-size: 3.2rem;
+  font-weight: 800;
+  color: #333;
+  letter-spacing: 3px;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  position: relative;
+  background: linear-gradient(135deg, #333 0%, #6B73FF 50%, #9644FF 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+  animation: titleGlow 3s ease-in-out infinite alternate;
+}
+@keyframes titleGlow {
+  0% { filter: drop-shadow(0 0 10px rgba(107, 115, 255, 0.3)); }
+  100% { filter: drop-shadow(0 0 20px rgba(150, 68, 255, 0.5)); }
+}
+.title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #6B73FF, #9644FF, #6B73FF, transparent);
+  border-radius: 2px;
+  animation: underlineGlow 2s ease-in-out infinite alternate;
+}
+@keyframes underlineGlow {
+  0% { box-shadow: 0 0 10px rgba(107, 115, 255, 0.5); }
+  100% { box-shadow: 0 0 20px rgba(150, 68, 255, 0.8); }
+}
+
+/* Search Section Styles */
+.search-section {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+.search-container {
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.search-input {
+  width: 100%;
+  padding: 1rem 1.5rem 1rem 3.5rem;
+  font-size: 1.1rem;
+  font-family: 'Poppins', sans-serif;
+  border: 3px solid #333;
+  border-radius: 50px;
+  background: white;
+  color: #333;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  outline: none;
+}
+.search-input:focus {
+  border-color: #6B73FF;
+  box-shadow: 0 0 20px rgba(107, 115, 255, 0.3);
+  transform: scale(1.02);
+}
+.search-input::placeholder {
+  color: #999;
+  font-weight: 400;
+}
+.search-icon {
+  position: absolute;
+  left: 1.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  color: #666;
+  transition: color 0.3s ease;
+}
+.search-input:focus + .search-icon {
+  color: #6B73FF;
+}
+.search-results-info {
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: #666;
+  font-weight: 500;
+}
+.no-results {
+  text-align: center;
+  padding: 3rem;
+  color: #999;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+.no-results-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #ddd;
+}
+.clear-search {
+  position: absolute;
+  right: 1.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #999;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  display: none;
+}
+.clear-search:hover {
+  color: #666;
+}
+.owner-section {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, rgba(107, 115, 255, 0.1), rgba(150, 68, 255, 0.1));
+  border-radius: 8px;
+  border: 1px solid rgba(107, 115, 255, 0.3);
+}
+.owner-login-btn {
+  background: linear-gradient(135deg, #6B73FF, #9644FF);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(107, 115, 255, 0.3);
+}
+.owner-login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(107, 115, 255, 0.5);
+}
+.owner-logged-in {
+  display: none;
+  text-align: center;
+  padding: 1rem;
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(139, 195, 74, 0.1));
+  border-radius: 8px;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  margin-bottom: 2rem;
+}
+.logout-btn {
+  background: #f44336;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 1rem;
+}
+.events-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  justify-content: flex-start;
+}
+.event-card {
+  background: white;
+  border: 2px solid #333;
+  border-radius: 8px;
+  padding: 1.5rem;
+  position: relative;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  min-height: 180px;
+  width: calc(33.333% - 1.5rem);
+  flex-shrink: 0;
+}
+@media (max-width: 1400px) {
+  .event-card {
+    width: calc(50% - 1rem);
+  }
+}
+@media (max-width: 900px) {
+  .event-card {
+    width: 100%;
+  }
+}
+.event-card::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  right: -3px;
+  bottom: -3px;
+  background: #ddd;
+  border-radius: 8px;
+  z-index: -1;
+  transition: all 0.3s ease;
+}
+.event-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(107, 115, 255, 0.3);
+  border-color: #6B73FF;
+}
+.event-card:hover::before {
+  transform: translate(-3px, -3px);
+  opacity: 0.8;
+}
+.event-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  transition: all 0.3s ease;
+}
+.event-card:hover .event-title {
+  color: #6B73FF;
+  text-shadow: 0 0 10px rgba(107, 115, 255, 0.3);
+}
+.event-datetime {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #666;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.event-details {
+  border-top: 1px solid #ddd;
+  padding-top: 0.5rem;
+  margin-top: 0.5rem;
+}
+.detail-line {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0.3rem 0;
+  line-height: 1.4;
+}
+.event-link {
+  color: #6B73FF;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+.event-link:hover {
+  color: #9644FF;
+  text-decoration: underline;
+}
+.event-icon {
+  position: absolute;
+  right: 1.5rem;
+  top: 1.5rem;
+  width: 40px;
+  height: 40px;
+  border: 2px solid #333;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+}
+.remove-btn {
+  display: none;
+ 	position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  z-index: 10;
+}
+.add-event-section {
+  text-align: right;
+  margin-top: 2rem;
+  display: none;
+}
+.add-event-btn {
+  background: white;
+  border: 3px solid #333;
+  padding: 1.2rem 2.5rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.plus-sign {
+  width: 20px;
+  height: 20px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  position: relative;
+  display: inline-block;
+}
+.plus-sign::before,
+.plus-sign::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+}
+.plus-sign::before {
+  width: 8px;
+  height: 2px;
+  top: 7px;
+  left: 4px;
+}
+.plus-sign::after {
+  width: 2px;
+  height: 8px;
+  top: 4px;
+  left: 7px;
+}
+
+/* Modal styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  align-items: center;
+  justify-content: center;
+}
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.modal h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  text-align: center;
+  color: #333;
+}
+.modal label {
+  display: block;
+  font-weight: 600;
+  margin-top: 1rem;
+  margin-bottom: 0.3rem;
+}
+.modal input {
+  width: 100%;
+  padding: 0.6rem;
+  border: 2px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+.modal button {
+  margin-top: 1.5rem;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+}
+.submit-btn {
+  background: linear-gradient(135deg, #6B73FF, #9644FF);
+  color: white;
+}
+.close-btn {
+  background: #ccc;
+  float: right;
+}
+@media (max-width: 768px) {
+  .home-button {
+    top: 15px;
+    right: 15px;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+  }
+  .title {
+    font-size: 2.5rem;
+  }
+}
+  </style>
+</head>
+<body>
+
+  <!-- Home Button -->
+  <a href="homepage.html" class="home-button">
+    <svg class="home-icon" viewBox="0 0 24 24">
+      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+    </svg>
+    Home
+  </a>
+
+  <div class="container">
+    <div class="header">
+      <h1 class="title">Upcoming Events</h1>
+    </div>
+
+    <!-- Search Section -->
+    <div class="search-section">
+      <div class="search-container">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search events by name, venue, or date..." />
+        <svg class="search-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+        <button class="clear-search" id="clearSearch">×</button>
+      </div>
+      <div class="search-results-info" id="searchResultsInfo"></div>
+    </div>
+
+    <!-- Owner Login Info → Only shown initially -->
+    <div class="owner-section" id="ownerSection">
+      <p style="margin-bottom: 1rem; color: #666; font-size: 1rem;">
+        Only authorized administrators can add or remove events.
+      </p>
+      <button class="owner-login-btn" id="ownerLoginBtn">Owner Login</button>
+    </div>
+
+    <!-- Logged-in Owner Panel (hidden initially) -->
+    <div class="owner-logged-in" id="ownerLoggedIn">
+      <p style="color: #4CAF50; font-weight: 600;">✓ Logged in as Administrator</p>
+      <button class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+
+    <!-- No events found -->
+    <div class="no-results" id="noResults" style="display: none;">
+      <div class="no-results-icon">🔍</div>
+      <p>No events found matching your search.</p>
+    </div>
+
+    <!-- Event Cards -->
+    <div class="events-grid" id="eventsGrid"></div>
+
+    <!-- Add Event Button (for owner only) -->
+    <div class="add-event-section" id="addEventSection">
+      <button class="add-event-btn" id="openModalBtn">
+        Add Event
+        <span class="plus-sign"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Owner Login Modal -->
+  <div class="modal" id="loginModal">
+    <div class="modal-content">
+      <h2>Owner Login</h2>
+      <label for="ownerPassword">Password</label>
+      <input type="password" id="ownerPassword" placeholder="Enter owner password" />
+      <button class="submit-btn" id="loginSubmitBtn">Login</button>
+      <button class="close-btn" id="closeLoginBtn">Close</button>
+    </div>
+  </div>
+
+  <!-- Add Event Modal -->
+  <div class="modal" id="eventModal">
+    <div class="modal-content">
+      <h2>Add New Event</h2>
+      <label for="eventName">Event Name</label>
+      <input type="text" id="eventName" placeholder="Enter event name" />
+      <label for="eventDate">Event Date & Time</label>
+      <input type="datetime-local" id="eventDate" />
+      <label for="eventVenue">Event Venue</label>
+      <input type="text" id="eventVenue" placeholder="Enter venue location" />
+      <label for="eventLink">Event Information Link</label>
+      <input type="url" id="eventLink" placeholder="https://example.com" />
+      <button class="submit-btn" id="submitEventBtn">Submit</button>
+      <button class="close-btn" id="closeModalBtn">Close</button>
+    </div>
+  </div>
+
+  <script>
+    let isOwnerLoggedIn = false;
+    let allEvents = [];
+    const ownerPassword = "shivansh";
+
+    // Save events to localStorage
+    function saveEvents() {
+      localStorage.setItem("events", JSON.stringify(allEvents));
+    }
+
+    // Save login status to localStorage
+    function saveLoginStatus() {
+      localStorage.setItem("isOwnerLoggedIn", JSON.stringify(isOwnerLoggedIn));
+    }
+
+    // Load events from localStorage—or use defaults if none exist
+    function loadEvents() {
+      const stored = localStorage.getItem("events");
+      if (stored) {
+        allEvents = JSON.parse(stored);
+      } else {
+        allEvents = [
+          { title: 'Tech Conference 2024', datetime: 'March 15, 2024, 9:00 AM', venue: 'Main Auditorium', link: '#', icon: 'TC' },
+          { title: 'AI Workshop', datetime: 'March 20, 2024, 2:00 PM', venue: 'Computer Lab', link: '#', icon: 'AI' },
+          { title: 'Web Development Bootcamp', datetime: 'March 25, 2024, 10:00 AM', venue: 'Innovation Center', link: '#', icon: 'WD' },
+          { title: 'Data Science Seminar', datetime: 'April 1, 2024, 3:00 PM', venue: 'Research Hall', link: '#', icon: 'DS' },
+          { title: 'Cybersecurity Summit', datetime: 'April 5, 2024, 11:00 AM', venue: 'Security Complex', link: '#', icon: 'CS' }
+        ];
+        saveEvents();
+      }
+      renderEvents();
+    }
+
+    // Load owner login state
+    function loadLoginStatus() {
+      const state = JSON.parse(localStorage.getItem("isOwnerLoggedIn"));
+      isOwnerLoggedIn = state === true;
+      document.getElementById("ownerSection").style.display = isOwnerLoggedIn ? "none" : "block";
+      document.getElementById("ownerLoggedIn").style.display = isOwnerLoggedIn ? "block" : "none";
+      document.getElementById("addEventSection").style.display = isOwnerLoggedIn ? "block" : "none";
+      if (isOwnerLoggedIn) {
+        showRemoveButtons();
+      } else {
+        hideRemoveButtons();
+      }
+    }
+
+    // Render event cards
+    function renderEvents(filteredList) {
+      const grid = document.getElementById("eventsGrid");
+      grid.innerHTML = "";
+      (filteredList || allEvents).forEach(event => {
+        grid.appendChild(createEventCard(event));
+      });
+    }
+
+    // Build a single event card element
+    function createEventCard(event) {
+      const card = document.createElement("div");
+      card.className = "event-card";
+      card.innerHTML = `
+        <button class="remove-btn" onclick="removeEvent(this)" ${isOwnerLoggedIn ? "" : 'style="display:none;"'}>×</button>
+        <div class="event-title">${event.title}</div>
+        <div class="event-datetime">${event.datetime}</div>
+        <div class="event-details">
+          <div class="detail-line"><strong>Venue:</strong> ${event.venue}</div>
+          <div class="detail-line"><a href="${event.link}" target="_blank" class="event-link">More Info</a></div>
+        </div>
+        <div class="event-icon">${event.icon}</div>
+      `;
+      return card;
+    }
+
+    function showRemoveButtons() {
+      document.querySelectorAll(".remove-btn").forEach(btn => btn.style.display = "block");
+    }
+
+    function hideRemoveButtons() {
+      document.querySelectorAll(".remove-btn").forEach(btn => btn.style.display = "none");
+    }
+
+    function removeEvent(button) {
+      if (isOwnerLoggedIn && confirm("Are you sure you want to remove this event?")) {
+        const title = button.parentElement.querySelector(".event-title").textContent;
+        allEvents = allEvents.filter(e => e.title !== title);
+        saveEvents();
+        renderEvents();
+      } else if (!isOwnerLoggedIn) {
+        alert("⚠ Please login as owner first!");
+      }
+    }
+
+    function initializeSearch() {
+      const input = document.getElementById("searchInput");
+      const clear = document.getElementById("clearSearch");
+      const resultsInfo = document.getElementById("searchResultsInfo");
+      const noResults = document.getElementById("noResults");
+
+      input.addEventListener("input", () => {
+        const term = input.value.trim().toLowerCase();
+        if (term) {
+          clear.style.display = "block";
+          const filtered = allEvents.filter(e =>
+            e.title.toLowerCase().includes(term) ||
+            e.venue.toLowerCase().includes(term) ||
+            e.datetime.toLowerCase().includes(term)
+          );
+          renderEvents(filtered);
+          resultsInfo.textContent = filtered.length
+            ? `Found ${filtered.length} event${filtered.length > 1 ? "s" : ""} matching "${term}"`
+            : "";
+          noResults.style.display = filtered.length ? "none" : "block";
+        } else {
+          clear.style.display = "none";
+          resultsInfo.textContent = "";
+          noResults.style.display = "none";
+          renderEvents();
+        }
+      });
+
+      clear.addEventListener("click", () => {
+        input.value = "";
+        clear.style.display = "none";
+        resultsInfo.textContent = "";
+        noResults.style.display = "none";
+        renderEvents();
+        input.focus();
+      });
+
+      input.addEventListener("keypress", e => {
+        if (e.key === "Enter") e.preventDefault();
+      });
+    }
+
+    // Login / Logout Handlers
+    document.getElementById("ownerLoginBtn").addEventListener("click", () => {
+      document.getElementById("loginModal").style.display = "flex";
+    });
+
+    document.getElementById("closeLoginBtn").addEventListener("click", () => {
+      document.getElementById("loginModal").style.display = "none";
+      document.getElementById("ownerPassword").value = "";
+    });
+
+    document.getElementById("loginSubmitBtn").addEventListener("click", () => {
+      if (document.getElementById("ownerPassword").value === ownerPassword) {
+        isOwnerLoggedIn = true;
+        saveLoginStatus();
+        loadLoginStatus();
+        document.getElementById("loginModal").style.display = "none";
+        document.getElementById("ownerPassword").value = "";
+      } else {
+        alert("❌ Incorrect password! Access denied.");
+      }
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      isOwnerLoggedIn = false;
+      saveLoginStatus();
+      loadLoginStatus();
+    });
+
+    // Add Event workflow
+    document.getElementById("openModalBtn").addEventListener("click", () => {
+      isOwnerLoggedIn
+        ? document.getElementById("eventModal").style.display = "flex"
+        : alert("⚠ Please login as owner first!");
+    });
+
+    document.getElementById("closeModalBtn").addEventListener("click", () => {
+      document.getElementById("eventModal").style.display = "none";
+    });
+
+    document.getElementById("submitEventBtn").addEventListener("click", () => {
+      const name = document.getElementById("eventName").value.trim();
+      const dateVal = document.getElementById("eventDate").value.trim();
+      const venue = document.getElementById("eventVenue").value.trim();
+      const link = document.getElementById("eventLink").value.trim();
+
+      if (!name || !dateVal || !venue || !link) {
+        alert("⚠ Please fill in all fields before submitting.");
+        return;
+      }
+
+      const initials = name.split(" ").map(w => w[0]).join("").substring(0, 2).toUpperCase();
+      const event = {
+        title: name,
+        datetime: new Date(dateVal).toLocaleString(),
+        venue,
+        link,
+        icon: initials
+      };
+
+      allEvents.push(event);
+      saveEvents();
+      renderEvents();
+      document.getElementById("eventModal").style.display = "none";
+      document.getElementById("eventName").value = "";
+      document.getElementById("eventDate").value = "";
+      document.getElementById("eventVenue").value = "";
+      document.getElementById("eventLink").value = "";
+    });
+
+    // Close modals when clicking outside them
+    window.addEventListener("click", e => {
+      if (e.target.classList.contains("modal")) e.target.style.display = "none";
+    });
+
+    // Initialize app on load
+    document.addEventListener("DOMContentLoaded", () => {
+      loadEvents();
+      loadLoginStatus();
+      initializeSearch();
+    });
+  </script>
+</body>
+</html>
+
+
+
+events with search and database

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #4a5568;
+            text-decoration: none;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-content {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease; /* smooth hover */
+        }
+
+        .nav-link:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .logout-btn {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid transparent;
+        }
+
+        .logout-btn:hover {
+            background: #ef4444;
+            color: white;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+            border-color: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 70vh;
+            overflow: hidden;
+        }
+
+        .slider {
+            display: flex;
+            width: 600%;
+            height: 100%;
+            transition: transform 0.8s ease-in-out;
+        }
+
+        .slide {
+            width: 16.66%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .slide1 { background-image: url('shivansh.jpeg'); }
+        .slide2 { background-image: url('how-to-run-a-hackathon-2 2.webp'); }
+        .slide3 { background-image: url('https://cdn.pixabay.com/photo/2016/11/30/20/44/computer-1873831_1280.png'); }
+        .slide4 { background-image: url('https://cdn.pixabay.com/photo/2018/05/14/16/54/cyber-3400789_1280.jpg'); }
+        .slide5 { background-image: url('shivansh2.jpeg'); }
+        .slide6 { background-image: url('what-is-a-hackathon-1920x1200 2.jpg.webp'); }
+
+        .slide-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+
+        .slide-content h2 {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .slide-content p {
+            font-size: 20px;
+            opacity: 0.9;
+        }
+
+        .slider-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slider-dot.active {
+            background: rgba(255, 255, 255, 1);
+            transform: scale(1.2);
+        }
+
+        .slider-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            cursor: pointer;
+            font-size: 18px;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .slider-nav:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .slider-prev {
+            left: 20px;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .slider-next {
+            right: 20px;
+            border-radius: 5px 0 0 5px;
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .nav-content {
+                gap: 20px;
+            }
+
+            .nav-menu {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .nav-link, .logout-btn {
+                font-size: 14px;
+                padding: 6px 12px;
+            }
+            
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .slide-content h2 {
+                font-size: 32px;
+            }
+            
+            .slide-content p {
+                font-size: 16px;
+            }
+            
+            .slider-container {
+                height: 50vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="nav-container">
+            <a href="#" class="logo">College Portal</a>
+            <div class="nav-content">
+                <nav>
+                    <ul class="nav-menu">
+                        <li class="nav-item"><a href="events2.html" class="nav-link">Events</a></li>
+                        <li class="nav-item"><a href="lostandfound.html" class="nav-link">Lost & Found</a></li>
+                        <li class="nav-item"><a href="alumni.html" class="nav-link">Alumni Details</a></li>
+                        <li class="nav-item"><a href="studentrequirement.html" class="nav-link">Student Requirements</a></li>
+                    </ul>
+                </nav>
+                <a href="loginpage.html" class="logout-btn">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="slider-container">
+        <button class="slider-nav slider-prev" onclick="changeSlide(-1)">❮</button>
+        <button class="slider-nav slider-next" onclick="changeSlide(1)">❯</button>
+        
+        <div class="slider" id="slider">
+            <div class="slide slide1">
+                <div class="slide-overlay">
+                    <div class="slide-content">
+                        <h2>Tech Meetups & Conferences</h2>
+                        <p>Join industry leaders and innovators</p>
+                    </div>
+                </div>
+            </div>
+            <div class="slide slide2">
+                <div class="slide-overlay">
+                    <div class="slide-content">
+                        <h2>AI & Machine Learning</h2>
+                        <p>Explore the future of artificial intelligence</p>
+                    </div>
+                </div>
+            </div>
+            <div class="slide slide3">
+                <div class="slide-overlay">
+                    <div class="slide-content">
+                        <h2>Programming Workshops</h2>
+                        <p>Hands-on coding sessions and hackathons</p>
+                    </div>
+                </div>
+            </div>
+            <div class="slide slide4">
+                <div class="slide-overlay">
+                    <div class="slide-content">
+                        <h2>Cybersecurity Events</h2>
+                        <p>Learn about digital security and protection</p>
+                    </div>
+                </div>
+            </div>
+            <div class="slide slide5">
+                <div class="slide-overlay">
+                    <div class="slide-content">
+                        <h2>Data Science Seminars</h2>
+                        <p>Discover insights through data analytics</p>
+                    </div>
+                </div>
+            </div>
+            <div class="slide slide6">
+                <div class="slide-overlay">
+                    <div class="slide-content">
+                        <h2>Software Development</h2>
+                        <p>Build applications and digital solutions</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slider-controls">
+            <span class="slider-dot active" onclick="goToSlide(0)"></span>
+            <span class="slider-dot" onclick="goToSlide(1)"></span>
+            <span class="slider-dot" onclick="goToSlide(2)"></span>
+            <span class="slider-dot" onclick="goToSlide(3)"></span>
+            <span class="slider-dot" onclick="goToSlide(4)"></span>
+            <span class="slider-dot" onclick="goToSlide(5)"></span>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const totalSlides = 6;
+        const slider = document.getElementById('slider');
+        const dots = document.querySelectorAll('.slider-dot');
+
+        function updateSlider() {
+            const translateX = -(currentSlide * (100 / totalSlides));
+            slider.style.transform = `translateX(${translateX}%)`;
+            
+            // Update dots
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide >= totalSlides) currentSlide = 0;
+            if (currentSlide < 0) currentSlide = totalSlides - 1;
+            updateSlider();
+        }
+
+        function goToSlide(slideIndex) {
+            currentSlide = slideIndex;
+            updateSlider();
+        }
+
+        // Auto-slide functionality
+        function autoSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateSlider();
+        }
+
+        // Start auto-sliding every 4 seconds
+        setInterval(autoSlide, 4000);
+
+        // Pause auto-slide on hover
+        const sliderContainer = document.querySelector('.slider-container');
+        let autoSlideInterval = setInterval(autoSlide, 4000);
+
+        sliderContainer.addEventListener('mouseenter', () => {
+            clearInterval(autoSlideInterval);
+        });
+
+        sliderContainer.addEventListener('mouseleave', () => {
+            autoSlideInterval = setInterval(autoSlide, 4000);
+        });
+    </script>
+
+    <main class="main-content">
+        <h2 style="color: #4a5568; margin-bottom: 30px;">Your College Portal Services</h2>
+        <p style="color: #666; font-size: 18px;">Access all college services and information in one place</p>
+    </main>
+</body>
+</html>

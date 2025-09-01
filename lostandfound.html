@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lost & Found</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0; padding: 0; min-height: 100vh; background: white;
+    }
+
+    /* Home Button Styles - exactly like event page */
+    .home-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #6B73FF, #9644FF);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(107, 115, 255, 0.3);
+      z-index: 10000;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .home-btn:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 8px 25px rgba(107, 115, 255, 0.5);
+    }
+    .home-btn:active {
+      transform: translateY(0) scale(1);
+    }
+    .home-icon {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    .header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      padding: 0; position: sticky; top: 0; z-index: 1000;
+    }
+    .nav-container {
+      max-width: 1200px; margin: 0 auto; display: flex; align-items: center;
+      justify-content: space-between; padding: 15px 20px; gap: 40px; flex-wrap: nowrap;
+    }
+    .nav-left {
+      display: flex; align-items: center; gap: 40px; flex-wrap: nowrap;
+    }
+    .search-container {
+      display: flex; align-items: center; gap: 10px; max-width: 300px;
+      background: white; border-radius: 8px; padding: 8px 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.3s ease;
+    }
+    .search-container:focus-within {
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    }
+    .search-input {
+      border: none; outline: none; padding: 4px 8px; font-size: 14px;
+      color: #4a5568; background: transparent; width: 200px;
+    }
+    .search-btn {
+      background: linear-gradient(135deg, #667eea, #764ba2); color: white;
+      border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer;
+      font-size: 14px; transition: all 0.3s ease; display: flex; align-items: center;
+    }
+    .search-btn:hover {
+      transform: translateY(-1px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+    .nav-btn {
+      background: white; color: #4a5568; border: none; padding: 12px 24px;
+      border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 500;
+      text-decoration: none; transition: all 0.3s ease;
+    }
+    .nav-btn:hover, .nav-btn.active {
+      background: linear-gradient(135deg, #667eea, #764ba2); color: white;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); transform: translateY(-2px);
+    }
+    .container { max-width: 1200px; margin: 0 auto; min-height: calc(100vh - 80px); }
+    .screen { display: none; padding: 60px 20px; }
+    .screen.active { display: block; }
+    h1 { font-size: 48px; color: #4a5568; margin-bottom: 30px; font-weight: bold; text-align: center; }
+    h2 { font-size: 32px; color: #4a5568; margin-bottom: 20px; text-align: center; }
+    .form-group { margin-bottom: 25px; max-width: 600px; margin-left: auto; margin-right: auto; }
+    input[type="text"], input[type="date"], textarea {
+      width: 100%; padding: 15px; border: 2px solid #e2e8f0; border-radius: 8px;
+      font-size: 16px; transition: border-color 0.3s ease;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    input:focus, textarea:focus {
+      outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+    }
+    textarea { height: 100px; resize: vertical; }
+    .upload-area {
+      border: 3px dashed #cbd5e0; border-radius: 8px; padding: 40px; text-align: center;
+      background: #f7fafc; transition: all 0.3s ease; cursor: pointer;
+    }
+    .upload-area:hover { border-color: #667eea; background: #edf2f7; }
+    .upload-icon { font-size: 48px; color: #a0aec0; margin-bottom: 15px; }
+    .upload-text { color: #718096; font-size: 16px; }
+    .submit-btn {
+      background: linear-gradient(135deg, #667eea, #764ba2); color: white;
+      border: none; padding: 15px 40px; border-radius: 8px; font-size: 16px;
+      font-weight: 600; cursor: pointer; transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(102,126,234,0.3); display: block; margin: 30px auto 0;
+    }
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102,126,234,0.4); }
+    .item-card {
+      background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 25px;
+      margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: all 0.3s ease;
+      max-width: 800px; margin-left: auto; margin-right: auto;
+    }
+    .item-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+    .item-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+    .item-icon {
+      width: 50px; height: 50px; background: linear-gradient(135deg,#667eea,#764ba2);
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      font-size: 24px; color: white;
+    }
+    .item-title { font-size: 24px; font-weight: 600; color: #4a5568; }
+    .item-details { color: #718096; line-height: 1.6; }
+    .item-details div { margin-bottom: 5px; }
+    .item-details strong { color: #4a5568; }
+    .item-image {
+      margin-top: 15px; max-width: 50%; border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .empty-state { text-align: center; padding: 60px 20px; color: #718096; }
+    .empty-icon { font-size: 72px; margin-bottom: 20px; opacity: 0.5; }
+    .empty-state h3 { color: #4a5568; margin-bottom: 10px; font-size: 24px; }
+    .empty-state p { font-size: 16px; }
+    @media (max-width:768px){
+      .home-btn {
+        top: 15px;
+        right: 15px;
+        padding: 10px 16px;
+        font-size: 0.9rem;
+      }
+      .nav-container{gap:10px;flex-wrap:wrap;justify-content:flex-start;}
+      .nav-left{gap:10px;flex-wrap:wrap;}
+      .nav-btn{font-size:12px;padding:8px 12px;}
+      .search-container{max-width:250px;width:100%;margin:10px 0;}
+      .search-input{width:150px;font-size:12px;}
+      .search-btn{font-size:12px;padding:4px 8px;}
+      .screen{padding:40px 15px;}
+      h1{font-size:36px;} h2{font-size:28px;}
+      .item-card{margin:0 10px 20px;}
+      .item-header{flex-direction:column;text-align:center;gap:10px;}
+      .item-title{font-size:20px;}
+    }
+  </style>
+</head>
+<body>
+  <!-- Home Button -->
+  <a href="homepage.html" class="home-btn">
+    <svg class="home-icon" viewBox="0 0 24 24">
+      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+    </svg>
+    Home
+  </a>
+
+  <header class="header">
+    <div class="nav-container">
+      <div class="nav-left">
+        <button class="nav-btn active" onclick="showScreen('found-items')">Found Items</button>
+        <button class="nav-btn" onclick="showScreen('lost-items')">Lost Items</button>
+        <button class="nav-btn" onclick="showScreen('report-found')">Report Found</button>
+        <button class="nav-btn" onclick="showScreen('report-lost')">Report Lost</button>
+      </div>
+      <div class="search-container">
+        <input type="text" id="search-input" class="search-input" placeholder="Search items...">
+        <button onclick="searchItems()" class="search-btn">🔍</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Found Items Screen -->
+    <div id="found-items" class="screen active">
+      <h1>Found Items</h1>
+      <div id="found-items-list"></div>
+      <div id="found-empty" class="empty-state" style="display: none;">
+        <div class="empty-icon">📦</div>
+        <h3>No found items yet</h3>
+        <p>Be the first to report a found item!</p>
+      </div>
+    </div>
+
+    <!-- Lost Items Screen -->
+    <div id="lost-items" class="screen">
+      <h1>Lost Items</h1>
+      <div id="lost-items-list"></div>
+      <div id="lost-empty" class="empty-state" style="display: none;">
+        <div class="empty-icon">🔍</div>
+        <h3>No lost items reported</h3>
+        <p>Hope everyone has their belongings!</p>
+      </div>
+    </div>
+
+    <!-- Report Found Item Screen -->
+    <div id="report-found" class="screen">
+      <h1>Report Found Item</h1>
+      <form id="found-form">
+        <div class="form-group"><input type="text" id="found-name" placeholder="Enter item name" required></div>
+        <div class="form-group"><input type="text" id="found-location" placeholder="Where did you find it?" required></div>
+        <div class="form-group"><input type="date" id="found-date" required></div>
+        <div class="form-group"><input type="text" id="found-contact" placeholder="Your contact info" required></div>
+        <div class="form-group"><textarea id="found-description" placeholder="Describe the item"></textarea></div>
+        <div class="form-group">
+          <div class="upload-area" onclick="document.getElementById('found-image').click()">
+            <div class="upload-icon">📷</div>
+            <div class="upload-text">Upload image</div>
+            <input type="file" id="found-image" accept="image/*" style="display: none;">
+          </div>
+        </div>
+        <button type="submit" class="submit-btn">Report Found Item</button>
+      </form>
+    </div>
+
+    <!-- Report Lost Item Screen -->
+    <div id="report-lost" class="screen">
+      <h1>Report Lost Item</h1>
+      <form id="lost-form">
+        <div class="form-group"><input type="text" id="lost-name" placeholder="Enter item name" required></div>
+        <div class="form-group"><input type="text" id="lost-location" placeholder="Where did you lose it?" required></div>
+        <div class="form-group"><input type="date" id="lost-date" required></div>
+        <div class="form-group"><input type="text" id="lost-contact" placeholder="Your contact info" required></div>
+        <div class="form-group"><textarea id="lost-description" placeholder="Describe the item"></textarea></div>
+        <div class="form-group">
+          <div class="upload-area" onclick="document.getElementById('lost-image').click()">
+            <div class="upload-icon">📷</div>
+            <div class="upload-text">Upload image</div>
+            <input type="file" id="lost-image" accept="image/*" style="display: none;">
+          </div>
+        </div>
+        <button type="submit" class="submit-btn">Report Lost Item</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Load from localStorage
+    let foundItems = JSON.parse(localStorage.getItem("foundItems") || "[]");
+    let lostItems = JSON.parse(localStorage.getItem("lostItems") || "[]");
+    let filteredFoundItems = [...foundItems];
+    let filteredLostItems = [...lostItems];
+
+    function saveData() {
+      localStorage.setItem("foundItems", JSON.stringify(foundItems));
+      localStorage.setItem("lostItems", JSON.stringify(lostItems));
+    }
+
+    // Search functionality
+    function searchItems() {
+      const query = document.getElementById('search-input').value.toLowerCase().trim();
+      
+      if (!query) {
+        filteredFoundItems = [...foundItems];
+        filteredLostItems = [...lostItems];
+      } else {
+        filteredFoundItems = foundItems.filter(item => 
+          item.name.toLowerCase().includes(query) ||
+          item.location.toLowerCase().includes(query) ||
+          (item.description && item.description.toLowerCase().includes(query))
+        );
+        filteredLostItems = lostItems.filter(item => 
+          item.name.toLowerCase().includes(query) ||
+          item.location.toLowerCase().includes(query) ||
+          (item.description && item.description.toLowerCase().includes(query))
+        );
+      }
+      
+      renderFoundItems();
+      renderLostItems();
+    }
+
+    // Search on Enter key
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('search-input').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') searchItems();
+      });
+      document.getElementById('search-input').addEventListener('input', searchItems);
+    });
+
+    // Navigation
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
+      event.target.classList.add('active');
+      if (screenId === 'found-items') renderFoundItems();
+      if (screenId === 'lost-items') renderLostItems();
+    }
+
+    // Render Found Items
+    function renderFoundItems() {
+      const container = document.getElementById('found-items-list');
+      const emptyState = document.getElementById('found-empty');
+      if (filteredFoundItems.length === 0) {
+        container.innerHTML = '';
+        emptyState.style.display = 'block';
+        if (document.getElementById('search-input').value.trim()) {
+          emptyState.innerHTML = `
+            <div class="empty-icon">🔍</div>
+            <h3>No found items match your search</h3>
+            <p>Try a different search term</p>
+          `;
+        } else {
+          emptyState.innerHTML = `
+            <div class="empty-icon">📦</div>
+            <h3>No found items yet</h3>
+            <p>Be the first to report a found item!</p>
+          `;
+        }
+        return;
+      }
+      emptyState.style.display = 'none';
+      container.innerHTML = filteredFoundItems.map(item => `
+        <div class="item-card">
+          <div class="item-header">
+            <div class="item-icon">${getItemIcon(item.name)}</div>
+            <div class="item-title">${item.name}</div>
+          </div>
+          <div class="item-details">
+            <div><strong>Found at:</strong> ${item.location}</div>
+            <div><strong>Date:</strong> ${formatDate(item.date)}</div>
+            <div><strong>Contact:</strong> ${item.contact}</div>
+            ${item.description ? `<div><strong>Description:</strong> ${item.description}</div>` : ''}
+            ${item.image ? `<img src="${item.image}" class="item-image">` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Render Lost Items
+    function renderLostItems() {
+      const container = document.getElementById('lost-items-list');
+      const emptyState = document.getElementById('lost-empty');
+      if (filteredLostItems.length === 0) {
+        container.innerHTML = '';
+        emptyState.style.display = 'block';
+        if (document.getElementById('search-input').value.trim()) {
+          emptyState.innerHTML = `
+            <div class="empty-icon">🔍</div>
+            <h3>No lost items match your search</h3>
+            <p>Try a different search term</p>
+          `;
+        } else {
+          emptyState.innerHTML = `
+            <div class="empty-icon">🔍</div>
+            <h3>No lost items reported</h3>
+            <p>Hope everyone has their belongings!</p>
+          `;
+        }
+        return;
+      }
+      emptyState.style.display = 'none';
+      container.innerHTML = filteredLostItems.map(item => `
+        <div class="item-card">
+          <div class="item-header">
+            <div class="item-icon">${getItemIcon(item.name)}</div>
+            <div class="item-title">${item.name}</div>
+          </div>
+          <div class="item-details">
+            <div><strong>Lost at:</strong> ${item.location}</div>
+            <div><strong>Date:</strong> ${formatDate(item.date)}</div>
+            <div><strong>Contact:</strong> ${item.contact}</div>
+            ${item.description ? `<div><strong>Description:</strong> ${item.description}</div>` : ''}
+            ${item.image ? `<img src="${item.image}" class="item-image">` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function getItemIcon(name) {
+      const map = { wallet: '💳', phone: '📱', keys: '🔑', book: '📚', bag: '🎒', watch: '⌚', glasses: '👓', laptop: '💻' };
+      name = name.toLowerCase();
+      for (const k in map) if (name.includes(k)) return map[k];
+      return '📦';
+    }
+
+    function formatDate(date) {
+      return new Date(date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    // Convert file to Base64
+    function getBase64(file, cb) {
+      const reader = new FileReader();
+      reader.onload = () => cb(reader.result);
+      reader.readAsDataURL(file);
+    }
+
+    // Form handlers
+    document.getElementById('found-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const file = document.getElementById('found-image').files[0];
+      if (file) {
+        getBase64(file, img => addFound(img));
+      } else addFound(null);
+    });
+
+    function addFound(image) {
+      foundItems.push({
+        id: Date.now(),
+        name: document.getElementById('found-name').value,
+        location: document.getElementById('found-location').value,
+        date: document.getElementById('found-date').value,
+        contact: document.getElementById('found-contact').value,
+        description: document.getElementById('found-description').value,
+        image
+      });
+      filteredFoundItems = [...foundItems];
+      saveData(); renderFoundItems(); document.getElementById('found-form').reset();
+      alert("Found item reported!"); showScreen('found-items');
+    }
+
+    document.getElementById('lost-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const file = document.getElementById('lost-image').files[0];
+      if (file) {
+        getBase64(file, img => addLost(img));
+      } else addLost(null);
+    });
+
+    function addLost(image) {
+      lostItems.push({
+        id: Date.now(),
+        name: document.getElementById('lost-name').value,
+        location: document.getElementById('lost-location').value,
+        date: document.getElementById('lost-date').value,
+        contact: document.getElementById('lost-contact').value,
+        description: document.getElementById('lost-description').value,
+        image
+      });
+      filteredLostItems = [...lostItems];
+      saveData(); renderLostItems(); document.getElementById('lost-form').reset();
+      alert("Lost item reported!"); showScreen('lost-items');
+    }
+
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('found-date').value = today;
+      document.getElementById('lost-date').value = today;
+      renderFoundItems(); renderLostItems();
+    });
+  </script>
+</body>
+</html>
